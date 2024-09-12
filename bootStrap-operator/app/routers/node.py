@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.services import register_node, deregister_node, get_node_by_service, update_heartbeat
+from app.services import register_node, deregister_node, get_node_by_service, update_heartbeat, get_all_nodes
 from pydantic import BaseModel
 
 router = APIRouter()
@@ -44,3 +44,13 @@ def heartbeat(heartbeat_data: HeartbeatUpdate, db: Session = Depends(get_db)):
     if not node:
         raise HTTPException(status_code=404, detail="Node not found")
     return {"message": "Heartbeat updated", "last_heartbeat": node.last_heartbeat}
+
+@router.get("/nodes")
+def list_all_nodes(db: Session = Depends(get_db)):
+    nodes = get_all_nodes(db)
+    
+    if not nodes:
+        raise HTTPException(status_code=404, detail="No nodes registered.")
+    
+    # Return all node details as a list of dictionaries
+    return [{"id": node.id, "service_type": node.service_type, "ip_address": node.ip_address, "port": node.port, "last_heartbeat": node.last_heartbeat} for node in nodes]

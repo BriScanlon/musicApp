@@ -29,3 +29,8 @@ def update_heartbeat(db: Session, node_id: int):
         db.refresh(node)
         return node
     return None
+
+def get_all_nodes(db: Session):
+    """Fetch all registered nodes from the database"""
+    nodes = db.query(Node).all()
+    return nodes
