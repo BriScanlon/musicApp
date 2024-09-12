@@ -21,10 +21,15 @@ def register(node: NodeRegistration, db: Session = Depends(get_db)):
 
 @router.get("/lookup/{service_type}")
 def lookup(service_type: str, db: Session = Depends(get_db)):
-    node = get_node_by_service(db, service_type)
-    if not node:
-        raise HTTPException(status_code=404, detail="Node not found")
-    return {"ip_address": node.ip_address, "port": node.port}
+    # Get all nodes with the matching service_type
+    nodes = get_node_by_service(db, service_type)
+    
+    # If no nodes are found, raise an HTTPException
+    if not nodes:
+        raise HTTPException(status_code=404, detail="No nodes found")
+    
+    # Return a list of node IP addresses and ports
+    return [{"ip_address": node.ip_address, "port": node.port} for node in nodes]
 
 @router.delete("/deregister/{node_id}")
 def deregister(node_id: int, db: Session = Depends(get_db)):

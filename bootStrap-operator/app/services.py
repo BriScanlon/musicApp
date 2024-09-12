@@ -18,8 +18,8 @@ def deregister_node(db: Session, node_id: int):
     return False
 
 def get_node_by_service(db: Session, service_type: str):
-    node = db.query(Node).filter(Node.service_type == service_type).first()
-    return node
+    nodes = db.query(Node).filter(Node.service_type == service_type).all()
+    return nodes
 
 def update_heartbeat(db: Session, node_id: int):
     node = db.query(Node).filter(Node.id == node_id).first()
