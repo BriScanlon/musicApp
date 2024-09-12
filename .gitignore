@@ -1,2 +1,4 @@
 /bootStrap-operator/.env
 /bootStrap-operator/venv/
+/bootStrap-operator/app/__pycache__
+/bootStrap-operator/app/routers/__pycache__
