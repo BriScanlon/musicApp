@@ -1,9 +1,10 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "mysql+pymysql://root:NewSecurePassword123@localhost:3306/bootstrap_db"
+    DATABASE_URL: str
 
     class Config:
         env_file = ".env"
 
+# Instantiate settings object which will read from the .env file
 settings = Settings()
