@@ -35,4 +35,4 @@ echo DATABASE_URL=mysql+pymysql://%DB_USER%:%DB_PASSWORD%@%DB_HOST%:3306/%DB_NAM
 
 :: Step 5: Run the FastAPI Application
 echo Starting the FastAPI Bootstrap Operator...
-uvicorn app.main:app --reload
+uvicorn app.main:app --host 0.0.0.0 --port 80 --reload
