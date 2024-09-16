@@ -7,6 +7,7 @@ from app.services import (
     get_node_by_service,
     update_heartbeat,
     get_all_nodes,
+    get_existing_node,
 )
 from pydantic import BaseModel
 
@@ -25,6 +26,14 @@ class HeartbeatUpdate(BaseModel):
 
 @router.post("/api/node/register")
 def register(node: NodeRegistration, db: Session = Depends(get_db)):
+    # Check if the node with the same service_type, ip_address, and port already exists
+    existing_node = get_existing_node(db, node.service_type, node.ip_address, node.port)
+
+    if existing_node:
+        # If the node already exists, return a message indicating it is already registered
+        return {"message": "Node already registered", "node_id": existing_node.id}
+
+    # If the node doesn't exist, register the new node
     db_node = register_node(db, node.service_type, node.ip_address, node.port)
     return {"node_id": db_node.id, "message": "Node registered successfully"}
 
